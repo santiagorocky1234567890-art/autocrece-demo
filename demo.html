@@ -1,0 +1,137 @@
+<title>Demo AutoCrece</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: una columna estrecha tipo celular, chat protagonista, contacto al final */
+:root{
+  --bg:#F2F6F3; --surface:#FFFFFF; --fg:#14201B; --muted:#55655E; --line:#D9E3DD;
+  --brand:#0F6E56; --brand-2:#1D9E75; --brand-text:#0F6E56; --chat-bg:#E7EEE9;
+  --me:#D3EFE2; --me-fg:#0A3A2C; --bot:#FFFFFF; --on-brand:#FFFFFF;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-head:'Space Grotesk','Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0D1411; --surface:#151F1A; --fg:#E7F0EB; --muted:#9BADA4; --line:#24322B;
+  --brand-text:#45C79B; --chat-bg:#101915; --me:#0F4A38; --me-fg:#D3EFE2; --bot:#1B2822; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0D1411; --surface:#151F1A; --fg:#E7F0EB; --muted:#9BADA4; --line:#24322B;
+  --brand-text:#45C79B; --chat-bg:#101915; --me:#0F4A38; --me-fg:#D3EFE2; --bot:#1B2822; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.5;
+  padding-block:24px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:44px;height:44px;flex:none}
+.brand b{font-family:var(--font-head);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.brand b span{color:var(--brand-text)}
+.brand small{display:block;color:var(--muted);font-size:13px}
+h1{font-family:var(--font-head);font-size:26px;line-height:1.15;margin:0;font-weight:700;text-wrap:balance;letter-spacing:-.015em}
+.lead{color:var(--muted);margin:6px 0 0;text-wrap:pretty}
+.phone{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.bar{display:flex;align-items:center;gap:10px;background:var(--brand);color:var(--on-brand);padding:10px 14px}
+.dot{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--brand);display:grid;place-items:center;font-family:var(--font-head);font-weight:700;font-size:15px}
+.bar b{display:block;font-weight:500;font-size:15px;line-height:1.2}
+.bar small{opacity:.85;font-size:12px}
+#chat{background:var(--chat-bg);height:min(440px,58vh);overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
+.m{max-width:86%;padding:8px 11px;border-radius:12px;white-space:pre-wrap;font-size:14px;line-height:1.45;background:var(--bot);border:1px solid var(--line);overflow-wrap:anywhere}
+.m.me{align-self:flex-end;background:var(--me);color:var(--me-fg);border-color:transparent}
+#opts{display:flex;flex-wrap:wrap;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--surface)}
+#opts button,.btn{font:inherit;font-size:14px;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid var(--brand);background:transparent;color:var(--brand-text);cursor:pointer}
+#opts button:hover,.btn:hover{background:var(--chat-bg)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+#tx{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:var(--surface)}
+#tx[hidden]{display:none}
+#tx input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.btn.solid{background:var(--brand);color:var(--on-brand)}
+.btn.solid:hover{background:var(--brand-2)}
+.note{font-size:13px;color:var(--muted);margin:0;text-align:center}
+.cta{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.cta h2{font-family:var(--font-head);font-size:19px;margin:0;font-weight:700}
+.cta p{margin:0;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.mail{font-weight:500;overflow-wrap:anywhere;user-select:all}
+ul{margin:0;padding-left:18px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.m{animation:in .18s ease-out}@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+<div class="wrap">
+  <div class="brand">
+    <svg viewBox="0 0 140 140" role="img" aria-label="Logo de AutoCrece"><rect width="140" height="140" rx="32" fill="#0F6E56"/><rect x="26" y="26" width="88" height="64" rx="16" fill="#fff"/><polygon points="40,88 40,110 64,88" fill="#fff"/><rect x="41" y="60" width="14" height="16" rx="3" fill="#1D9E75"/><rect x="63" y="46" width="14" height="30" rx="3" fill="#1D9E75"/><rect x="85" y="32" width="14" height="44" rx="3" fill="#0F6E56"/></svg>
+    <div><b>Auto<span>Crece</span></b><small>Automatiza. Crece.</small></div>
+  </div>
+  <div>
+    <h1>Así atenderá tu WhatsApp mientras tú cocinas</h1>
+    <p class="lead">Prueba el asistente como si fueras un cliente: mira la carta, haz un pedido y reserva una mesa. Es un restaurante de ejemplo; el tuyo llevaría tu carta, tus precios y tu horario.</p>
+  </div>
+  <div class="phone">
+    <div class="bar"><div class="dot">SC</div><div><b>Sabor Criollo</b><small>Restaurante de ejemplo</small></div></div>
+    <div id="chat" aria-live="polite"></div>
+    <div id="opts"></div>
+    <div id="tx" hidden><input id="ti" placeholder="Escribe tu respuesta" aria-label="Tu respuesta"><button class="btn solid" id="ts">Enviar</button></div>
+  </div>
+  <p class="note"><button class="btn" id="rs">Empezar de nuevo</button></p>
+  <div class="cta">
+    <h2>¿Lo quieres para tu negocio?</h2>
+    <ul>
+      <li>Atiende clientes, toma pedidos y agenda reservas o citas, 24 horas.</li>
+      <li>Te avisa de cada pedido y lo deja guardado.</li>
+      <li>Primera semana de prueba gratis.</li>
+    </ul>
+    <p>Escríbenos a:</p>
+    <div class="row"><span class="mail" id="mail">autocrece.agencia@gmail.com</span><button class="btn" id="cp">Copiar correo</button></div>
+    <p class="note" id="cm" style="text-align:left" hidden>Correo copiado</p>
+  </div>
+</div>
+<script>
+var C=[{n:'Platos fuertes',i:[['Bandeja paisa',38000],['Sancocho de gallina',28000],['Churrasco',42000],['Trucha al ajillo',36000]]},
+{n:'Entradas',i:[['Empanadas (3)',9000],['Arepa con queso',7000],['Patacones',12000]]},
+{n:'Bebidas',i:[['Jugo natural',8000],['Limonada de coco',10000],['Gaseosa',5000]]},
+{n:'Postres',i:[['Tres leches',11000],['Arroz con leche',8000]]}];
+var FEE=5000,PAY=['Efectivo','Transferencia','Datáfono'],S;
+function reset(){S={step:'idle',cart:[],o:{},r:{},p:null}}
+var chat=document.getElementById('chat'),opts=document.getElementById('opts'),tx=document.getElementById('tx'),ti=document.getElementById('ti');
+function m(n){return '$'+n.toLocaleString('es-CO')}
+function say(t,c){var d=document.createElement('div');d.className='m '+(c||'');d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function show(a){opts.innerHTML='';opts.hidden=false;tx.hidden=true;a.forEach(function(x){var b=document.createElement('button');b.textContent=x[0];b.onclick=function(){say(x[0],'me');go(x[1])};opts.appendChild(b)})}
+function ask(){opts.hidden=true;tx.hidden=false;ti.value='';ti.focus()}
+function total(){return S.cart.reduce(function(t,i){return t+i[1]*i[2]},0)}
+function cart(){return S.cart.map(function(i){return '• '+i[2]+' x '+i[0]+' — '+m(i[1]*i[2])}).join('\n')}
+function summary(){var f=S.o.t==='dom'?FEE:0;return 'Resumen del pedido\n'+cart()+'\n\nSubtotal: '+m(total())+(f?'\nDomicilio: '+m(f):'')+'\nTotal: '+m(total()+f)+'\n\n'+(S.o.t==='dom'?'Entrega: '+S.o.d:'Recoger en el restaurante')+'\nPago: '+S.o.pay}
+function main(){say('¡Hola! Bienvenido a Sabor Criollo. ¿En qué te puedo ayudar?');show([['Hacer un pedido','pedido'],['Ver la carta','carta'],['Reservar mesa','reserva'],['Horarios y ubicación','info'],['Hablar con una persona','humano']])}
+function cats(t){say(t||'Elige una categoría:');show(C.map(function(c,i){return [c.n,'cat'+i]}))}
+function pay(){say('¿Cómo vas a pagar?');show(PAY.map(function(p,i){return [p,'pg'+i]}))}
+function go(id){
+ if(id==='pedido')return cats('Empecemos tu pedido. Elige una categoría:');
+ if(id==='carta'){say(C.map(function(c){return c.n.toUpperCase()+'\n'+c.i.map(function(x){return '• '+x[0]+' — '+m(x[1])}).join('\n')}).join('\n\n'));say('¿Quieres pedir algo?');return show([['Hacer pedido','pedido'],['Reservar','reserva']])}
+ if(id==='info'){say('Calle 85 #15-20, Bogotá\n\nLun a Jue: 12:00 - 21:00\nVie y Sáb: 12:00 - 23:00\nDom: 12:00 - 17:00');return show([['Hacer pedido','pedido'],['Volver al inicio','main']])}
+ if(id==='humano'){say('Con gusto. Una persona del equipo te escribirá en breve.');return show([['Volver al inicio','main']])}
+ if(id==='main')return main();
+ if(id==='reserva'){S.r={};say('¿Para cuántas personas es la mesa?');return show([1,2,3,4,5,6].map(function(n){return [n+(n>1?' personas':' persona'),'p'+n]}))}
+ if(/^p\d$/.test(id)){S.r.p=id.slice(1);S.step='fecha';say('¿Para qué día? (ej: sábado 28 de noviembre)');return ask()}
+ if(id.indexOf('cat')===0){var c=C[+id.slice(3)];say(c.n+': elige un plato');return show(c.i.map(function(x,j){return [x[0]+' '+m(x[1]),'it'+id.slice(3)+'_'+j]}))}
+ if(id.indexOf('it')===0){var a=id.slice(2).split('_');S.p=C[+a[0]].i[+a[1]];say(S.p[0]+' — '+m(S.p[1])+'\n¿Cuántas unidades?');return show([['1','q1'],['2','q2'],['3','q3']])}
+ if(/^q\d$/.test(id)){var q=+id.slice(1),e=S.cart.filter(function(i){return i[0]===S.p[0]})[0];if(e)e[2]+=q;else S.cart.push([S.p[0],S.p[1],q]);say('Tu pedido\n'+cart()+'\n\nSubtotal: '+m(total()));return show([['Agregar más','mas'],['Finalizar','fin'],['Vaciar','vac']])}
+ if(id==='mas')return cats('¿Qué más quieres agregar?');
+ if(id==='vac'){S.cart=[];say('Pedido vaciado.');return show([['Volver al inicio','main']])}
+ if(id==='fin'){say('¿Cómo lo quieres recibir?');return show([['Domicilio','dom'],['Recoger','rec']])}
+ if(id==='dom'){S.o.t='dom';S.step='dir';say('Escribe tu dirección completa (con barrio y referencias):');return ask()}
+ if(id==='rec'){S.o.t='rec';return pay()}
+ if(id.indexOf('pg')===0){S.o.pay=PAY[+id.slice(2)];say(summary()+'\n\n¿Confirmas el pedido?');return show([['Confirmar','ok'],['Cancelar','no']])}
+ if(id==='ok'){say('Pedido P'+Math.floor(100000+Math.random()*899999)+' confirmado. Total: '+m(total()+(S.o.t==='dom'?FEE:0))+'. Gracias por elegir Sabor Criollo.');say('El dueño recibe este pedido por mensaje, ya armado, y queda guardado.');reset();return show([['Volver al inicio','main']])}
+ if(id==='no'){reset();say('Pedido cancelado.');return show([['Volver al inicio','main']])}
+ if(id==='rok'){say('Reserva R'+Math.floor(100000+Math.random()*899999)+' recibida. ¡Te esperamos!');reset();return show([['Volver al inicio','main']])}
+ if(id==='rno'){reset();say('Reserva cancelada.');return show([['Volver al inicio','main']])}
+}
+function send(){var t=ti.value.trim();if(!t)return;say(t,'me');
+ if(S.step==='dir'){S.o.d=t;S.step='idle';return pay()}
+ if(S.step==='fecha'){S.r.f=t;S.step='hora';say('¿A qué hora? (ej: 7:30 pm)');return ask()}
+ if(S.step==='hora'){S.r.h=t;S.step='nom';say('¿A nombre de quién dejamos la reserva?');return ask()}
+ if(S.step==='nom'){S.r.n=t;S.step='idle';say('Confirma tu reserva\nPersonas: '+S.r.p+'\nFecha: '+S.r.f+'\nHora: '+S.r.h+'\nNombre: '+S.r.n);return show([['Confirmar','rok'],['Cancelar','rno']])}}
+document.getElementById('ts').onclick=send;
+ti.addEventListener('keydown',function(e){if(e.key==='Enter')send()});
+document.getElementById('rs').onclick=function(){reset();chat.innerHTML='';main()};
+document.getElementById('cp').onclick=function(){var t=document.getElementById('mail').textContent,n=document.getElementById('cm');
+ function ok(){n.hidden=false;setTimeout(function(){n.hidden=true},2000)}
+ try{navigator.clipboard.writeText(t).then(ok,function(){sel()})}catch(e){sel()}
+ function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('mail'));var s=getSelection();s.removeAllRanges();s.addRange(r)}};
+reset();main();
+</script>
